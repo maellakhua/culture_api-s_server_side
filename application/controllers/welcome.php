@@ -35,7 +35,6 @@ class Welcome extends CI_Controller {
         public function test()
         {
                 $this->load->model("hello_model");
-                //$profile = $this->hello_model->getProfile("Kostas");
                 $fbprofile = $this->hello_model->getFbSession();
                 
                 //$this->load->view('header');
