@@ -146,7 +146,7 @@ class Googleplus extends CI_Model {
                         {
                         switch ($category) 
                         {
-                          case "Museums":
+                          case "Museum":
                            $ar_category[]="museum";
                            break;
                           case "Sightseeing":
@@ -167,6 +167,9 @@ class Googleplus extends CI_Model {
                           case "Entertainment":
                            $ar_category[]="amusement";
                            break;
+                          case "Parks":
+                           $ar_category[]="park";
+                           break;   
                           case "General":
                            $ar_category[]="transport";
                            break;

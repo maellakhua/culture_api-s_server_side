@@ -214,7 +214,7 @@ class Facebook extends CI_Model {
           $GLOBALS['fbJson'][$len-1] = "]";    //Remove last ',' character from final JSON string
           $GLOBALS['fbJson'] = $GLOBALS['fbJson']."}";  //Finalize JSON string and return it
           //echo $GLOBALS['fbJson'];
-          return $GLOBALS['fbJson'];  
+          return $GLOBALS['fbJson'];
         } catch (FacebookRequestException $ex) {
           echo $ex->getMessage();
         } catch (\Exception $ex) {

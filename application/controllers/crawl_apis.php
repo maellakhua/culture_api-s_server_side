@@ -43,7 +43,38 @@ class Crawl_apis extends REST_Controller {
         $googleJson = $this->googleplus->index($town, $lat, $long, $categories);
         $ggl_decoded = json_decode($googleJson);
         //Merge all decoded jsons into a single array, and re-encode
-        $final_decoded = array_merge($fb_decoded->results, $fsq_decoded->results, $ggl_decoded->results);
+        //var_dump($fb_decoded);
+        if($fb_decoded == NULL){  //If Facebook API hasn't returned any results
+            if($fsq_decoded == NULL && $ggl_decoded != NULL){
+                $final_decoded = array_merge($ggl_decoded->results);
+            }else if($fsq_decoded != NULL && $ggl_decoded == NULL){
+                $final_decoded = array_merge($fsq_decoded->results);
+            }else{
+                $final_decoded = array_merge($fsq_decoded->results, $ggl_decoded->results);
+            }
+        }
+        if($fsq_decoded == NULL){  //If Foursquare API hasn't returned any results
+            if($fb_decoded == NULL && $ggl_decoded != NULL){
+                $final_decoded = array_merge($ggl_decoded->results);
+            }else if($fb_decoded != NULL && $ggl_decoded == NULL){
+                $final_decoded = array_merge($fb_decoded->results);
+            }else{
+                $final_decoded = array_merge($fb_decoded->results, $ggl_decoded->results);
+            }
+        }
+        if($ggl_decoded == NULL){  //If Google+ API hasn't returned any results
+            if($fb_decoded == NULL && $fsq_decoded != NULL){
+                $final_decoded = array_merge($fsq_decoded->results);
+            }else if($fb_decoded != NULL && $fsq_decoded == NULL){
+                $final_decoded = array_merge($fb_decoded->results);
+            }else{
+                $final_decoded = array_merge($fb_decoded->results, $fsq_decoded->results);
+            }
+        }
+        if($fb_decoded != NULL && $fsq_decoded != NULL && $ggl_decoded != NULL){  //If all APIs have returned results, collect data from all
+            $final_decoded = array_merge($fb_decoded->results, $fsq_decoded->results, $ggl_decoded->results);
+        }
+        
         $finalJson = '{"results":'.json_encode($final_decoded).'}';
         echo $finalJson;
         return $finalJson;
@@ -51,6 +82,10 @@ class Crawl_apis extends REST_Controller {
     }
     
     public function data_get(){
+        
+        header('content-type: application/json; charset=utf-8');
+        header("access-control-allow-origin: *");
+        
         if($this->get('categories')){
             $categories = explode("_", $this->get('categories'));
         }else{
