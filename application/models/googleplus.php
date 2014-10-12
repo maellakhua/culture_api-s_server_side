@@ -115,7 +115,7 @@ class Googleplus extends CI_Model {
             {													
                 $data_array[] = array('name' =>$result['name'],
                                       'lat' => $result['geometry']['location']['lat'], 
-				      'lng' => $result['geometry']['location']['lng'],
+				      'long' => $result['geometry']['location']['lng'],
                                       'address' => $result['vicinity'],
                                       'category'=> $result['types'][0],  
                                       'source' => "Google Plus"
