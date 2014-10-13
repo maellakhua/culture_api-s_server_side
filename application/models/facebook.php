@@ -1,22 +1,22 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once( 'Facebook/HttpClients/FacebookHttpable.php' );
-require_once( 'Facebook/HttpClients/FacebookCurl.php' );
-require_once( 'Facebook/HttpClients/FacebookCurlHttpClient.php' );
+require_once( APPPATH.'/libraries/Facebook/HttpClients/FacebookHttpable.php' );
+require_once( APPPATH.'/libraries/Facebook/HttpClients/FacebookCurl.php' );
+require_once( APPPATH.'/libraries/Facebook/HttpClients/FacebookCurlHttpClient.php' );
  
-require_once( 'Facebook/Entities/AccessToken.php' );
-require_once( 'Facebook/Entities/SignedRequest.php' );
+require_once( APPPATH.'/libraries/Facebook/Entities/AccessToken.php' );
+require_once( APPPATH.'/libraries/Facebook/Entities/SignedRequest.php' );
  
-require_once( 'Facebook/FacebookSession.php' );
-require_once( 'Facebook/FacebookRedirectLoginHelper.php' );
-require_once( 'Facebook/FacebookRequest.php' );
-require_once( 'Facebook/FacebookResponse.php' );
-require_once( 'Facebook/FacebookSDKException.php' );
-require_once( 'Facebook/FacebookRequestException.php' );
-require_once( 'Facebook/FacebookOtherException.php' );
-require_once( 'Facebook/FacebookAuthorizationException.php' );
-require_once( 'Facebook/GraphObject.php' );
-require_once( 'Facebook/GraphSessionInfo.php' );
+require_once( APPPATH.'/libraries/Facebook/FacebookSession.php' );
+require_once( APPPATH.'/libraries/Facebook/FacebookRedirectLoginHelper.php' );
+require_once( APPPATH.'/libraries/Facebook/FacebookRequest.php' );
+require_once( APPPATH.'/libraries/Facebook/FacebookResponse.php' );
+require_once( APPPATH.'/libraries/Facebook/FacebookSDKException.php' );
+require_once( APPPATH.'/libraries/Facebook/FacebookRequestException.php' );
+require_once( APPPATH.'/libraries/Facebook/FacebookOtherException.php' );
+require_once( APPPATH.'/libraries/Facebook/FacebookAuthorizationException.php' );
+require_once( APPPATH.'/libraries/Facebook/GraphObject.php' );
+require_once( APPPATH.'/libraries/Facebook/GraphSessionInfo.php' );
  
 use Facebook\HttpClients\FacebookHttpable;
 use Facebook\HttpClients\FacebookCurl;

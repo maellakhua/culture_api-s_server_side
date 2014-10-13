@@ -2,7 +2,11 @@
 
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+require APPPATH . '/libraries/FoursquareAPI.class.php';
+
 class Foursquaremodel extends CI_Model {
+    
+    private $foursquareapi;
     
     //map for REST to foursquare categories' id
     private $foursquareCategories = array("Museum" => array("Museum" => "4bf58dd8d48988d181941735"),
@@ -44,10 +48,12 @@ class Foursquaremodel extends CI_Model {
     
     public function foursquare($town = "Athens", $lat = NULL, $long = NULL, $categories = NULL) {
         
-        $constructorParams = array("client_id" => "P2ZXCLYA23YUGKUDQN15Q3RCU1SJDONYAPSZ0RVUGXDDPNXK",
-                                    "client_secret" => "XZMBGVHELDAFS20DBRTEKDKUNLSTYX52TOB0YQ1GACI4EI1L");
+        //$constructorParams = array("client_id" => "P2ZXCLYA23YUGKUDQN15Q3RCU1SJDONYAPSZ0RVUGXDDPNXK",
+          //                          "client_secret" => "XZMBGVHELDAFS20DBRTEKDKUNLSTYX52TOB0YQ1GACI4EI1L");
 
-        $this->load->library('Foursquareapi', $constructorParams);
+        //$this->load->library('Foursquareapi', $constructorParams);
+        
+        $this->foursquareapi = new FoursquareAPI("P2ZXCLYA23YUGKUDQN15Q3RCU1SJDONYAPSZ0RVUGXDDPNXK", "XZMBGVHELDAFS20DBRTEKDKUNLSTYX52TOB0YQ1GACI4EI1L");
     
         if(!empty($lat) && !empty($long)) {
             $place = array("ll"=>"$lat,$long");

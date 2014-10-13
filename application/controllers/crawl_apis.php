@@ -33,6 +33,11 @@ class Crawl_apis extends REST_Controller {
     private function collectApiData($town, $lat, $long, $categories){
         //{results:[{obje1},{obj2]}}
         //Get json encoded results from each individual API
+        
+        $this->load->model("europeana");
+        $eurJson = $this->europeana->api($town, $lat, $long, $categories);
+        $eur_decoded = json_decode($eurJson);
+        
         $this->load->model("facebook");
         $fbJson = $this->facebook->fbApi($town, $lat, $long, $categories);
         $fb_decoded = json_decode($fbJson);
@@ -75,8 +80,11 @@ class Crawl_apis extends REST_Controller {
             $final_decoded = array_merge($fb_decoded->results, $fsq_decoded->results, $ggl_decoded->results);
         }
         
+        //to tsatsika add europeana
+        $final_decoded = array_merge($final_decoded, $eur_decoded->results);
+        
         $finalJson = '{"results":'.json_encode($final_decoded).'}';
-        echo $finalJson;
+//        echo $finalJson;
         return $finalJson;
         
     }
@@ -96,10 +104,10 @@ class Crawl_apis extends REST_Controller {
             if (!$this->get('town')) {
                 $this->response(NULL, 400);
             } else {
-                $this->collectApiData($this->get('town'), NULL, NULL, $categories);
+                $this->response($this->collectApiData($this->get('town'), NULL, NULL, $categories), 200);
             }
         }else{
-            $this->collectApiData(NULL, $this->get('lat'), $this->get('long'), $categories);
+            $this->response($this->collectApiData(NULL, $this->get('lat'), $this->get('long'), $categories), 200);
         }
         
         
