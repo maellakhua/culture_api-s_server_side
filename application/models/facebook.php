@@ -1,22 +1,22 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once( APPPATH.'/libraries/Facebook/HttpClients/FacebookHttpable.php' );
-require_once( APPPATH.'/libraries/Facebook/HttpClients/FacebookCurl.php' );
-require_once( APPPATH.'/libraries/Facebook/HttpClients/FacebookCurlHttpClient.php' );
+require_once( 'Facebook/HttpClients/FacebookHttpable.php' );
+require_once( 'Facebook/HttpClients/FacebookCurl.php' );
+require_once( 'Facebook/HttpClients/FacebookCurlHttpClient.php' );
  
-require_once( APPPATH.'/libraries/Facebook/Entities/AccessToken.php' );
-require_once( APPPATH.'/libraries/Facebook/Entities/SignedRequest.php' );
+require_once( 'Facebook/Entities/AccessToken.php' );
+require_once( 'Facebook/Entities/SignedRequest.php' );
  
-require_once( APPPATH.'/libraries/Facebook/FacebookSession.php' );
-require_once( APPPATH.'/libraries/Facebook/FacebookRedirectLoginHelper.php' );
-require_once( APPPATH.'/libraries/Facebook/FacebookRequest.php' );
-require_once( APPPATH.'/libraries/Facebook/FacebookResponse.php' );
-require_once( APPPATH.'/libraries/Facebook/FacebookSDKException.php' );
-require_once( APPPATH.'/libraries/Facebook/FacebookRequestException.php' );
-require_once( APPPATH.'/libraries/Facebook/FacebookOtherException.php' );
-require_once( APPPATH.'/libraries/Facebook/FacebookAuthorizationException.php' );
-require_once( APPPATH.'/libraries/Facebook/GraphObject.php' );
-require_once( APPPATH.'/libraries/Facebook/GraphSessionInfo.php' );
+require_once( 'Facebook/FacebookSession.php' );
+require_once( 'Facebook/FacebookRedirectLoginHelper.php' );
+require_once( 'Facebook/FacebookRequest.php' );
+require_once( 'Facebook/FacebookResponse.php' );
+require_once( 'Facebook/FacebookSDKException.php' );
+require_once( 'Facebook/FacebookRequestException.php' );
+require_once( 'Facebook/FacebookOtherException.php' );
+require_once( 'Facebook/FacebookAuthorizationException.php' );
+require_once( 'Facebook/GraphObject.php' );
+require_once( 'Facebook/GraphSessionInfo.php' );
  
 use Facebook\HttpClients\FacebookHttpable;
 use Facebook\HttpClients\FacebookCurl;
@@ -132,6 +132,7 @@ class Facebook extends CI_Model {
                     $final['address'] = $obj['location']['street'].', '.$obj['location']['city'];
                 }
                 $final['category'] = $obj['category_list'][$s]["name"];
+                $final['id'] = $obj['id'];
                 $final['source'] = "Facebook";
                 $GLOBALS['fbJson'] = $GLOBALS['fbJson'].json_encode($final).","; //append JSON encoded object to final JSON string
                 return true;
@@ -153,6 +154,7 @@ class Facebook extends CI_Model {
                     $final['address'] = $obj['location']['street'].', '.$obj['location']['city'];
                 }
                 $final['category'] = $obj['category_list'][$s]["name"];
+                $final['id'] = $obj['id'];
                 $final['source'] = "Facebook";
                 $GLOBALS['fbJson'] = $GLOBALS['fbJson'].json_encode($final).","; //append JSON encoded object to final JSON string
                 return true;
@@ -220,5 +222,17 @@ class Facebook extends CI_Model {
         } catch (\Exception $ex) {
           echo $ex->getMessage();
         }
+    }
+    
+    public function getUrlandDesc($id){
+        //Get facebook API session, no token needed
+        $session = $this->fbSession();
+        
+        //Send request for given object id
+        $response = (new FacebookRequest($session, 'GET', '/'.$id))->execute();
+        
+        $arrayResult = json_decode($response->getRawResponse(), true);
+        $finalJson = '{"description":"'.(isset($arrayResult['description']) ? $arrayResult['description'] : "").'", "url":"'.(isset($arrayResult['link']) ? $arrayResult['link'] : "").'"} ';
+        return $finalJson;
     }
 }
