@@ -17,6 +17,9 @@ class Foursquaremodel extends CI_Model {
 		"Parks" => array("National Park" => "52e81612bcbc57f1066b7a21"),
 		"General" => array("Bus Station" => "4bf58dd8d48988d1fe931735", "Subway" => "4bf58dd8d48988d1fd931735"));
 
+	private $constructorParams = array("client_id" => "P2ZXCLYA23YUGKUDQN15Q3RCU1SJDONYAPSZ0RVUGXDDPNXK",
+			"client_secret" => "XZMBGVHELDAFS20DBRTEKDKUNLSTYX52TOB0YQ1GACI4EI1L");
+
 	// gets the results from foursquare API and returns them as an object to use
 	private function get_results_obj($params) {
 		$response = $this->foursquareapi->GetPublic("venues/search", $params);
@@ -48,18 +51,15 @@ class Foursquaremodel extends CI_Model {
 	}
 
 	//returns an assosiative array with extra info about a venue
-	private function get_extra_info($venue_id) {
+	public function get_extra_info($venue_id) {
+		$this->load->library('Foursquareapi', $this->constructorParams);// use the php library to get data from foursquare
 		$extra = json_decode($this->foursquareapi->GetPublic("venues/" . $venue_id));
-		return array("description" => isset($extra->response->venue->description) ? $extra->response->venue->description : "",
-			"url" => isset($extra->response->venue->shortUrl) ? $extra->response->venue->shortUrl : "");
+		return '{"description":"'.(isset($extra->response->venue->description) ? $extra->response->venue->description : '').'", "url":"'.(isset($extra->response->venue->shortUrl) ? $extra->response->venue->shortUrl : '').'"} ';
 	}
 
 	public function foursquare($town = "Athens", $lat = NULL, $long = NULL, $categories = NULL) {
 
-		$constructorParams = array("client_id" => "P2ZXCLYA23YUGKUDQN15Q3RCU1SJDONYAPSZ0RVUGXDDPNXK",
-			"client_secret" => "XZMBGVHELDAFS20DBRTEKDKUNLSTYX52TOB0YQ1GACI4EI1L");
-
-		$this->load->library('Foursquareapi', $constructorParams);// use the php library to get data from foursquare
+		$this->load->library('Foursquareapi', $this->constructorParams);// use the php library to get data from foursquare
 
 		if (!empty($lat) && !empty($long)) {
 			$place = array("ll" => "$lat,$long");// search by geodata
@@ -74,14 +74,12 @@ class Foursquaremodel extends CI_Model {
 		$finaljson = '{"results":';
 		$final_array = array();
 		foreach ($places->response->venues as $place) {
-			// $extras = $this->get_extra_info($place->id);
 			$final_array[] = array("name" => isset($place->name) ? $place->name : "",
 				"lat" => isset($place->location->lat) ? $place->location->lat : "",
 				"long" => isset($place->location->lng) ? $place->location->lng : "",
 				"address" => (isset($place->location->formattedAddress[0]) ? $place->location->formattedAddress[0] : "") . (isset($place->location->formattedAddress[1]) ? ", " . $place->location->formattedAddress[1] : ""),
 				"category" => isset($place->categories[0]->name) ? $place->categories[0]->name : "",
-                // "description" => $extras['description'],
-                // "url" => $extras['url'],
+				"id" => isset($place->id) ? $place->id : "",
 				"source" => "Foursquare");
 		}
 		$finaljson .= json_encode($final_array) . '}';
