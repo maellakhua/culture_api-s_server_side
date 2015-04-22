@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 /**
  * FoursquareApi
  * A PHP-based Foursquare client library with a focus on simplicity and ease of integration
@@ -26,7 +26,7 @@ define("HTTP_POST","POST");
 
 class FoursquareApiException extends Exception {}
 
-class FoursquareApi {
+class Foursquareapi {
 	
 	/** @var String $BaseUrl The base url for the foursquare API */
 	private $BaseUrl = "https://api.foursquare.com/";
@@ -62,13 +62,14 @@ class FoursquareApi {
      * @param string $language
      * @param string $api_version https://developer.foursquare.com/overview/versioning
      */
-	public function  __construct($client_id = false,$client_secret = false, $redirect_uri='', $version='v2', $language='en', $api_version=DEFAULT_VERSION){
-		$this->BaseUrl = "{$this->BaseUrl}$version/";
-		$this->ClientID = $client_id;
-		$this->ClientSecret = $client_secret;
-		$this->ClientLanguage = $language;
-		$this->RedirectUri = $redirect_uri;
-        $this->Version = $api_version;
+	public function  __construct($params){
+            $version = isset($params['version']) ? $params['version'] : 'v2';
+            $this->BaseUrl = "{$this->BaseUrl}$version/";
+            $this->ClientID = isset($params['client_id']) ? $params['client_id'] : false;
+            $this->ClientSecret = isset($params['client_secret']) ? $params['client_secret'] : false;
+            $this->ClientLanguage = isset($params['language']) ? $params['language'] : 'en';
+            $this->RedirectUri = isset($params['redirect_uri']) ? $params['redirect_uri'] : '';
+            $this->Version = isset($params['api_version']) ? $params['api_version'] : DEFAULT_VERSION;
 	}
     
 	public function setRedirectUri( $uri ) {
